@@ -8,6 +8,10 @@ Requirements
 
 Passing the archive role variable requires that the valid unarchiving software for ansible.builtin.unarchive is present. See the role variables section for more information.
 
+```bash
+ansible-galaxy install kristopherkram.github_release
+```
+
 Warning
 -------
 

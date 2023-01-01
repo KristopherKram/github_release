@@ -24,7 +24,7 @@ molecule-test-fedora-37:
     # Install molecule via pip
     - pip3 install molecule-docker molecule 
     # Run molecule
-    - cd dev_workstation && molecule test
+    - molecule test
   cache: 
     key: one-key-to-rule-them-all
     paths:

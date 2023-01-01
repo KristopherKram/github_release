@@ -1,0 +1,41 @@
+---
+# tasks file for github_release
+- name: Verify vars
+  ansible.builtin.fail:
+    msg: "You must specify the following vars to this role: github_user, github_repo, version, asset"
+  when:
+    - not github_user | length > 0
+    - not github_repo | length > 0
+    - not version | length > 0
+    - not asset | length > 0
+
+- name: Set variables
+  ansible.builtin.set_fact: 
+    asset_hash: "{{ (github_user + github_repo + version + asset) | ansible.builtin.hash('sha256') }}"
+    json_file_to_write: {'version': '1', 'sha256': "{{ (github_user + github_repo + version + asset) | ansible.builtin.hash('sha256') }}"}
+
+- name: Check if asset is installed
+  ansible.builtin.stat:
+    path: "{{ install_path }}{{ github_repo }}/.install-info.json"
+  register: asset_install_info
+
+- name: Read existing .install-info.json
+  ansible.builtin.slurp:
+    src: "{{ install_path }}{{ github_repo }}/.install-info.json"
+  when: asset_install_info.stat.exists
+  register: asset_install_slurp
+
+- name: Set variables
+  ansible.builtin.set_fact: 
+    json_file: "{{ asset_install_slurp['content'] | b64decode | from_json }}"
+  when: asset_install_info.stat.exists
+
+- name: Remove old asset
+  ansible.builtin.include_tasks:
+    file: uninstall.yml
+  when: (json_file is defined and json_file.sha256 != asset_hash) or not asset_install_info.stat.exists or uninstall
+
+- name: Install new asset
+  ansible.builtin.include_tasks:
+    file: install.yml
+  when: (json_file is defined and json_file.sha256 != asset_hash) or not asset_install_info.stat.exists and not uninstall

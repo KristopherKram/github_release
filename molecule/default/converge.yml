@@ -1,0 +1,199 @@
+---
+- name: Install python
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Get OS
+    ansible.builtin.raw: cat /etc/os-release
+    changed_when: false
+    register: os_release
+
+  - name: Check for python
+    ansible.builtin.raw: test -e /bin/python3
+    changed_when: false
+    register: python_installed
+    # This will fail on hosts without python3 installed
+    ignore_errors: true
+
+  - name: Install python - APT
+    ansible.builtin.raw: sh -c 'apt-get update && apt-get install python3 -y'
+    changed_when: false
+    when: "python_installed.rc != 0 and ('ubuntu' in os_release.stdout or 'debian' in os_release.stdout)"
+
+  - name: Install python2 - APT
+    ansible.builtin.raw: sh -c 'apt-get update && apt-get install python -y'
+    changed_when: false
+    when: "python_installed.rc != 0 and ('ubuntu' in os_release.stdout and 'Trusty Tahr' in os_release.stdout)"
+
+  - name: Install python - DNF
+    ansible.builtin.raw: dnf install -y python3
+    changed_when: false
+    when: "python_installed.rc != 0 and ('fedora' in os_release.stdout or 'REDHAT' in os_release.stdout) and not 'Amazon Linux' in os_release.stdout and not 'CentOS Linux 7' in os_release.stdout" 
+
+  - name: Install python - yum
+    ansible.builtin.raw: yum install -y python3
+    changed_when: false
+    when: "python_installed.rc != 0 and ('Amazon Linux' in os_release.stdout or 'CentOS Linux 7' in os_release.stdout)"
+
+  - name: Install python - zypper
+    ansible.builtin.raw: zypper install -y python3
+    changed_when: false
+    when: "python_installed.rc != 0 and ('openSUSE' in os_release.stdout)"
+
+  - name: Install python - pacman
+    ansible.builtin.raw: pacman -Sy --noconfirm python3
+    changed_when: false
+    when: "python_installed.rc != 0 and ('Arch Linux' in os_release.stdout)"
+
+  - name: Install python - apk
+    ansible.builtin.raw: apk add python3
+    changed_when: false
+    when: "python_installed.rc != 0 and ('Alpine Linux' in os_release.stdout)"
+
+  - name: Install equery
+    ansible.builtin.raw: apk add python3
+    changed_when: false
+    when: "python_installed.rc != 0 and ('Alpine Linux' in os_release.stdout)"
+
+  - name: Check for sudo
+    ansible.builtin.raw: test -e /usr/bin/sudo
+    changed_when: false
+    register: sudo_installed
+    ignore_errors: true
+
+  - name: Install sudo - APT
+    ansible.builtin.raw: sh -c 'apt-get update && apt-get install sudo -y'
+    changed_when: false
+    when: "sudo_installed.rc != 0 and ('ubuntu' in os_release.stdout or 'debian' in os_release.stdout)"
+
+  - name: Install sudo - DNF
+    ansible.builtin.raw: dnf install -y sudo
+    changed_when: false
+    when: "sudo_installed.rc != 0 and ('fedora' in os_release.stdout or 'REDHAT' in os_release.stdout) and not 'Amazon Linux' in os_release.stdout and not 'CentOS Linux 7' in os_release.stdout"
+
+  - name: Install sudo - yum
+    ansible.builtin.raw: yum install -y sudo
+    changed_when: false
+    when: "sudo_installed.rc != 0 and ('Amazon Linux' in os_release.stdout or 'CentOS Linux 7' in os_release.stdout)"
+
+  - name: Install sudo - apk
+    ansible.builtin.raw: apk add sudo
+    changed_when: false
+    when: "sudo_installed.rc != 0 and ('Alpine Linux' in os_release.stdout )"
+
+  - name: Install sudo - pacman
+    ansible.builtin.raw: pacman -Sy --noconfirm sudo
+    changed_when: false
+    when: "sudo_installed.rc != 0 and ('Arch Linux' in os_release.stdout)"
+
+
+- name: Install required packages
+  hosts: all
+  tasks:
+  - name: Install required packages
+    ansible.builtin.package:
+      name:
+        - ca-certificates
+        - bash
+        - sudo
+        - tar
+      state: present
+    become: true
+    changed_when: false
+
+
+- name: Converge
+  hosts: all
+  tasks:
+    # - name: "Uninstall krew when non installed"
+    #   ansible.builtin.include_role:
+    #     name: "kristopherkram.github_release"
+    #   vars:
+    #     github_user: kubernetes-sigs
+    #     github_repo: krew
+    #     version: v0.4.3
+    #     asset: krew-linux_amd64.tar.gz
+    #     archive: true
+    #     uninstall: true
+    #     asset_links:
+    #       - src: krew-linux_amd64
+    #         dest: /usr/local/bin/krew
+    #         owner: root
+    #         group: root
+    #         mode: "0755"
+    - name: "Install krew"
+      ansible.builtin.include_role:
+        name: "kristopherkram.github_release"
+      vars:
+        github_user: kubernetes-sigs
+        github_repo: krew
+        version: v0.4.3
+        asset: krew-linux_amd64.tar.gz
+        archive: true
+        asset_links:
+          - src: krew-linux_amd64
+            dest: /usr/local/bin/krew
+            owner: root
+            group: root
+            mode: "0755"
+    - name: "Install kind"
+      ansible.builtin.include_role:
+        name: "kristopherkram.github_release"
+      vars:
+        github_user: kubernetes-sigs
+        github_repo: kind
+        version: v0.17.0
+        asset: kind-linux-amd64
+        asset_links:
+          - src: kind-linux-amd64
+            dest: /usr/local/bin/kind-linux-amd64
+            owner: root
+            group: root
+            mode: "0755"
+    # - name: "Uninstall krew when installed"
+    #   ansible.builtin.include_role:
+    #     name: "kristopherkram.github_release"
+    #   vars:
+    #     github_user: kubernetes-sigs
+    #     github_repo: krew
+    #     version: v0.4.3
+    #     asset: krew-linux_amd64.tar.gz
+    #     archive: true
+    #     uninstall: true
+    #     asset_links:
+    #       - src: krew-linux_amd64
+    #         dest: /usr/local/bin/krew
+    #         owner: root
+    #         group: root
+    #         mode: "0755"
+    # - name: "Uninstall krew after being uninstalled"
+    #   ansible.builtin.include_role:
+    #     name: "kristopherkram.github_release"
+    #   vars:
+    #     github_user: kubernetes-sigs
+    #     github_repo: krew
+    #     version: v0.4.3
+    #     asset: krew-linux_amd64.tar.gz
+    #     archive: true
+    #     uninstall: true
+    #     asset_links:
+    #       - src: krew-linux_amd64
+    #         dest: /usr/local/bin/krew
+    #         owner: root
+    #         group: root
+    #         mode: "0755"
+    # - name: "Install krew"
+    #   ansible.builtin.include_role:
+    #     name: "kristopherkram.github_release"
+    #   vars:
+    #     github_user: kubernetes-sigs
+    #     github_repo: krew
+    #     version: v0.4.3
+    #     asset: krew-linux_amd64.tar.gz
+    #     archive: true
+    #     asset_links:
+    #       - src: krew-linux_amd64
+    #         dest: /usr/local/bin/krew
+    #         owner: root
+    #         group: root
+    #         mode: "0755"

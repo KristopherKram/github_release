@@ -1,0 +1,16 @@
+---
+# defaults file for github_release
+temp_download_path: /tmp/
+install_path: /opt/
+install_path_owner: root
+install_path_group: root
+install_path_mode: "0755"
+install_info_owner: root
+install_info_group: root
+install_info_mode: "0755"
+uninstall: false
+github_user: ""
+github_repo: ""
+version: ""
+asset: ""
+archive: false

@@ -1,0 +1,83 @@
+---
+dependency:
+  name: galaxy
+# driver:
+#   name: vagrant
+#   # provider needs to be set or else it will not respect the memory settings
+#   # https://github.com/ansible-community/molecule-vagrant/issues/152
+#   provider:
+#     name: libvirt
+# platforms:
+#   - name: ubuntu-2004
+#     box: generic/ubuntu2004
+#     memory: 1024
+#   - name: ubuntu-2204
+#     box: generic/ubuntu2204
+#     memory: 1024
+#   - name: almalinux-9
+#     box: almalinux/9
+#     memory: 1024
+#   - name: debian-11
+#     box: debian/bullseye64
+#     memory: 1024
+#   - name: fedora-37
+#     box: generic/fedora37
+#     memory: 1024
+driver:
+  name: docker
+platforms:
+  - name: alpine-3_16
+    image: docker.io/bash:alpine3.16
+    pre_build_image: true
+  - name: debian-12
+    image: docker.io/debian:bookworm
+    pre_build_image: true
+  - name: debian-11
+    image: docker.io/debian:bullseye
+    pre_build_image: true
+  - name: debian-10
+    image: docker.io/debian:buster
+    pre_build_image: true
+  - name: ubuntu-14_04
+    image: docker.io/ubuntu:14.04
+    pre_build_image: true
+  - name: ubuntu-16_04
+    image: docker.io/ubuntu:16.04
+    pre_build_image: true
+  - name: ubuntu-18_04
+    image: docker.io/ubuntu:18.04
+    pre_build_image: true
+  - name: ubuntu-20_04
+    image: docker.io/ubuntu:20.04
+    pre_build_image: true
+  - name: ubuntu-22_04
+    image: docker.io/ubuntu:22.04
+    pre_build_image: true
+  - name: arch
+    image: docker.io/archlinux:latest
+    pre_build_image: true
+  - name: almalinux-8
+    image: docker.io/almalinux:8
+    pre_build_image: true
+  - name: almalinux-9
+    image: docker.io/almalinux:9
+    pre_build_image: true
+  - name: centos-7
+    image: docker.io/centos:7
+    pre_build_image: true
+  - name: fedora-37
+    image: docker.io/fedora:37
+    pre_build_image: true
+  - name: amazonlinux-2
+    image: docker.io/amazonlinux:2
+    pre_build_image: true
+  - name: redhat-8-ubi
+    image: registry.access.redhat.com/ubi8/ubi
+    pre_build_image: true
+  - name: redhat-9-ubi
+    image: registry.access.redhat.com/ubi9/ubi
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

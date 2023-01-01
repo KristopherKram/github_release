@@ -1,0 +1,11 @@
+---
+- name: Create symbolic links
+  file:
+    src: "{{ install_path }}{{ github_repo }}/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    state: link
+  with_items: "{{ asset_links }}"
+  become: true

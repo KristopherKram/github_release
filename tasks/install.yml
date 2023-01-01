@@ -1,0 +1,62 @@
+---
+- name: Create folder to place the asset
+  ansible.builtin.file:
+    path: "{{ install_path }}{{ github_repo }}"
+    state: directory
+    owner: "{{ install_path_owner }}"
+    group: "{{ install_path_group }}"
+    mode: "{{ install_path_mode }}"
+  become: true
+
+- name: Check for file extension
+  ansible.builtin.set_fact: 
+    asset_dot: "{{ asset.find('.') }}"
+    file_extension: ".unkown"
+
+- name: Set file extension
+  ansible.builtin.set_fact:
+    file_extension: "{{ asset[(asset_dot | int):] }}"
+  when: asset_dot | int != -1
+
+- name: Download the asset
+  ansible.builtin.get_url:
+    url: "https://github.com/{{ github_user }}/{{ github_repo }}/releases/download/{{ version }}/{{ asset }}"
+    dest: "{{ temp_download_path }}github-asset-{{ asset_hash }}{{ file_extension }}"
+    force_basic_auth: yes
+
+- name: Copy the asset to the install path
+  copy: 
+    remote_src: True 
+    src: "{{ temp_download_path }}github-asset-{{ asset_hash }}{{ file_extension }}"
+    dest: "{{ install_path }}{{ github_repo }}/{{ asset }}"
+    owner: "{{ install_path_owner }}"
+    group: "{{ install_path_group }}"
+    mode: "{{ install_path_mode }}"
+  when: not archive
+
+- name: Extract the asset
+  ansible.builtin.unarchive:
+    src: "{{ temp_download_path }}github-asset-{{ asset_hash }}{{ file_extension }}"
+    dest: "{{ install_path }}{{ github_repo }}"
+    remote_src: true
+  when: archive
+  become: true
+
+- name: Remove the asset from the temp folder
+  file: 
+    path: "{{ temp_download_path }}github-asset-{{ asset_hash }}{{ file_extension }}"
+    state: absent
+
+- name: Update asset links
+  ansible.builtin.include_tasks:
+    file: links.yml
+  when: asset_links | length != 0
+
+- name: Create .install-info.json
+  copy:
+    dest: "{{ install_path }}{{ github_repo }}/.install-info.json"
+    content: "{{ json_file_to_write }}"
+    owner: "{{ install_info_owner }}"
+    group: "{{ install_info_group }}"
+    mode: "{{ install_info_mode }}"
+  become: true

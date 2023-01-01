@@ -1,0 +1,60 @@
+---
+variables:
+  PIP_CACHE_DIR: "$CACHE_PATH/python/.cache/pip"
+  CACHE_PATH: "$CI_PROJECT_DIR/cache"
+  # SonarQube variables
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
+  GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
+
+services:
+  - name: docker.io/docker:dind
+    alias: docker 
+
+molecule-test-fedora-37:
+  variables:
+    MOLECULE_PLATFORM_NAME: "fedora-37"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - cd dev_workstation && molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+ansible-lint:
+  stage: test
+  image: docker.io/docker
+  script:
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    - apk add --cache-dir $CACHE_PATH/alpine ansible-lint ansible 
+    - ansible-lint
+  cache:
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+sonarcloud-check:
+  stage: test
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner
+  only:
+    - merge_requests
+    - master
+    - develop

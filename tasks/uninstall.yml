@@ -1,0 +1,6 @@
+---
+- name: Remove asset
+  ansible.builtin.file:
+    path: "{{ install_path }}{{ github_repo }}"
+    state: absent
+  become: true

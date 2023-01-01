@@ -10,9 +10,329 @@ services:
   - name: docker.io/docker:dind
     alias: docker 
 
+molecule-test-alpine-3_16:
+  variables:
+    MOLECULE_PLATFORM_NAME: "alpine-3_16"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-debian-12:
+  variables:
+    MOLECULE_PLATFORM_NAME: "debian-12"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-debian-11:
+  variables:
+    MOLECULE_PLATFORM_NAME: "debian-11"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-debian-10:
+  variables:
+    MOLECULE_PLATFORM_NAME: "debian-10"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-ubuntu-14_04:
+  variables:
+    MOLECULE_PLATFORM_NAME: "ubuntu-14_04"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-ubuntu-16_04:
+  variables:
+    MOLECULE_PLATFORM_NAME: "ubuntu-16_04"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-ubuntu-18_04:
+  variables:
+    MOLECULE_PLATFORM_NAME: "ubuntu-18_04"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-ubuntu-20_04:
+  variables:
+    MOLECULE_PLATFORM_NAME: "ubuntu-20_04"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-ubuntu-22_04:
+  variables:
+    MOLECULE_PLATFORM_NAME: "ubuntu-22_04"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-arch:
+  variables:
+    MOLECULE_PLATFORM_NAME: "arch"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-almalinux-8:
+  variables:
+    MOLECULE_PLATFORM_NAME: "almalinux-8"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-almalinux-9:
+  variables:
+    MOLECULE_PLATFORM_NAME: "almalinux-9"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-centos-7:
+  variables:
+    MOLECULE_PLATFORM_NAME: "centos-7"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
 molecule-test-fedora-37:
   variables:
     MOLECULE_PLATFORM_NAME: "fedora-37"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-amazonlinux-2:
+  variables:
+    MOLECULE_PLATFORM_NAME: "amazonlinux-2"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-redhat-8-ubi:
+  variables:
+    MOLECULE_PLATFORM_NAME: "redhat-8-ubi"
+  stage: test
+  image: docker.io/docker
+  script:
+    # Create cahce directories
+    - mkdir -p $CACHE_PATH/alpine/
+    - mkdir -p $CACHE_PATH/python/
+    # install ansible via apk
+    - apk add --cache-dir $CACHE_PATH/alpine python3 py-pip ansible-lint ansible rsync
+    # Install molecule via pip
+    - pip3 install molecule-docker molecule 
+    # Run molecule
+    - molecule test
+  cache: 
+    key: one-key-to-rule-them-all
+    paths:
+      - $CACHE_PATH/
+
+molecule-test-redhat-9-ubi:
+  variables:
+    MOLECULE_PLATFORM_NAME: "redhat-9-ubi"
   stage: test
   image: docker.io/docker
   script:

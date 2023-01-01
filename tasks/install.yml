@@ -22,10 +22,12 @@
   ansible.builtin.get_url:
     url: "https://github.com/{{ github_user }}/{{ github_repo }}/releases/download/{{ version }}/{{ asset }}"
     dest: "{{ temp_download_path }}github-asset-{{ asset_hash }}{{ file_extension }}"
-    force_basic_auth: yes
+    owner: "{{ install_path_owner }}"
+    group: "{{ install_path_group }}"
+    mode: "{{ install_path_mode }}"
 
 - name: Copy the asset to the install path
-  copy: 
+  ansible.builtin.copy: 
     remote_src: True 
     src: "{{ temp_download_path }}github-asset-{{ asset_hash }}{{ file_extension }}"
     dest: "{{ install_path }}{{ github_repo }}/{{ asset }}"
@@ -43,7 +45,7 @@
   become: true
 
 - name: Remove the asset from the temp folder
-  file: 
+  ansible.builtin.file: 
     path: "{{ temp_download_path }}github-asset-{{ asset_hash }}{{ file_extension }}"
     state: absent
 
@@ -53,7 +55,7 @@
   when: asset_links | length != 0
 
 - name: Create .install-info.json
-  copy:
+  ansible.builtin.copy:
     dest: "{{ install_path }}{{ github_repo }}/.install-info.json"
     content: "{{ json_file_to_write }}"
     owner: "{{ install_info_owner }}"

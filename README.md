@@ -112,3 +112,14 @@ License
 
 GPL-3.0-or-later
 
+
+Developer notes
+---------------
+
+## Push to both GitLab and GitHub
+```bash
+git remote add origin https://gitlab.com/kristopherkram/github_release.git
+git remote add github https://github.com/kristopherkram/github_release.git
+git push -u origin --all
+git push -u github --all
+```

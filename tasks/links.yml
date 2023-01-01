@@ -1,6 +1,6 @@
 ---
 - name: Create symbolic links
-  file:
+  ansible.builtin.file:
     src: "{{ install_path }}{{ github_repo }}/{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{ item.owner }}"
